@@ -5,7 +5,7 @@ import pandas as pd
 # Drops columns from dataframes
 def drop_columns(data, *args):
     for i in args:
-        data.drop(columns=df.columns[i], inplace=True)
+        data.drop(columns=data.columns[i], inplace=True)
 
 
 # Encodes missing values as np.nan
@@ -19,7 +19,7 @@ def encode_values(data):
 
 
 # Import the CSV file
-df_all_jobs = pd.read_csv('../data/all_jobs.csv')
+df_all_jobs = pd.read_csv('../data/all_jobs.zip')
 df_scientist = pd.read_csv('../data/data-scientist-jobs.zip')
 df_engineer = pd.read_csv('../data/data-engineer-jobs.zip')
 df_glassdoor = pd.read_csv('../data/glassdoor-data-science-jobs.zip')
