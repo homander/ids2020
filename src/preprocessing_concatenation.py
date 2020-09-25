@@ -17,7 +17,6 @@ def encode_values(data):
 # Import the data #
 ###################
 
-
 # Import the CSV file
 df_all_jobs = pd.read_csv('../data/all_jobs.zip')
 df_scientist = pd.read_csv('../data/data-scientist-jobs.zip')
@@ -30,7 +29,7 @@ df_glassdoor = pd.read_csv('../data/glassdoor-data-science-jobs.zip')
 
 # Drop columns that we probably won't use
 # and which have a lot of missing values
-drop_columns(df_all_jobs, 15, 14, 13, 0)  # drop 'Unnamed: 0', 'Competitors', 'Easy Apply'
+drop_columns(df_all_jobs, 16, 15, 14, 1, 0)  # drop 'Unnamed: 0', 'Unnamed: 1, 'Revenue', 'Competitors', 'Easy Apply'
 drop_columns(df_scientist, 16, 15, 14, 1, 0)  # drop 'Unnamed: 0', 'index', 'Revenue', 'Competitors', 'Easy Apply'
 drop_columns(df_engineer, 14, 13, 12)  # drop 'Revenue', 'Competitors', 'Easy Apply'
 drop_columns(df_glassdoor, 13, 12)  # drop 'Revenue', 'Competitors'
@@ -60,6 +59,7 @@ df = df_full.dropna(axis=0, how='any').reset_index(drop=True)
 
 # Save the preprocessed data
 # Save also as an Excel workbook for easier viewing
+
 df_all_jobs.to_csv('../processed-data/all_jobs.csv')
 df_all_jobs.to_excel('../processed-data/all_jobs.xlsx')
 
