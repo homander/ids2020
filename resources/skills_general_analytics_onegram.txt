@@ -1,0 +1,1 @@
+tensorflow,sparkml,spark,hadoop,etl,pig,glue,scikit,numpy,mapreduce,nlp,pandas,pytorch,pyspark,keras,geopandas,zeppelin,jupyter

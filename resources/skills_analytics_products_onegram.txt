@@ -1,0 +1,1 @@
+tableau,cognos,sas,powerbi,talend,informatica,databricks,kibana,qlikview,qlik,netsuite

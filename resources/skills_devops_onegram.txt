@@ -1,0 +1,1 @@
+docker,kubernetes,vagrant,virtualbox,vmware,yarn,zookeeper,jenkins

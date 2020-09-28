@@ -1,0 +1,1 @@
+windows,linux,unix,aix,mainframe,mainframes,mac,macos,android,ios

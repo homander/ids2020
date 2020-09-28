@@ -1,0 +1,1 @@
+sap,nosql,hive,redshift,snowflake,mysql,hana,db2,cassandra,mongodb,postgresql,postgres,rds,mariadb,elasticsearch,sqlite,informix,dynamodb,dynamo,cosmos,cosmosdb,salesforce,influxdb,netezza,neo4j,solr,unisys,impala,hdfs,oracle,teradata,s3,hbase,bigquery,rdbms,aurora,sqlserver,ignite

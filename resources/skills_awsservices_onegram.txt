@@ -1,0 +1,1 @@
+emr,lambda,ec2,iam,sagemaker
