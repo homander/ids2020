@@ -13,7 +13,7 @@ def extract_numbers(x, y):
 #######################################
 
 # Import preprocessed CSV file
-df = pd.read_csv('../processed-data/df.csv')
+df = pd.read_csv('processed-data/df.csv')
 
 # Define number of working hours per year in US for the cases with 'Per hour' salary data
 hours = 1768
@@ -41,5 +41,5 @@ df['Avg Salary'] = (df['Max Salary'] + df['Min Salary']) / 2
 df.drop(columns=df.columns[[2, 0]], inplace=True)  # drop 'Unnamed: 0', 'Salary Estimate'
 
 # Save to csv, excel file
-df.to_csv('../processed-data/df_cleaning_2.csv')
-df.to_excel('../processed-data/df_cleaning_2.xlsx')
+df.to_csv('processed-data/df_cleaning_2.csv')
+df.to_excel('processed-data/df_cleaning_2.xlsx')

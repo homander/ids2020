@@ -18,10 +18,10 @@ def encode_values(data):
 ###################
 
 # Import the CSV file
-df_all_jobs = pd.read_csv('../data/all_jobs.zip')
-df_scientist = pd.read_csv('../data/data-scientist-jobs.zip')
-df_engineer = pd.read_csv('../data/data-engineer-jobs.zip')
-df_glassdoor = pd.read_csv('../data/glassdoor-data-science-jobs.zip')
+df_all_jobs = pd.read_csv('data/all_jobs.zip')
+df_scientist = pd.read_csv('data/data-scientist-jobs.zip')
+df_engineer = pd.read_csv('data/data-engineer-jobs.zip')
+df_glassdoor = pd.read_csv('data/glassdoor-data-science-jobs.zip')
 
 #############################
 # The 1st phase of cleaning #
@@ -60,20 +60,20 @@ df = df_full.dropna(axis=0, how='any').reset_index(drop=True)
 # Save the preprocessed data
 # Save also as an Excel workbook for easier viewing
 
-df_all_jobs.to_csv('../processed-data/all_jobs.csv')
-df_all_jobs.to_excel('../processed-data/all_jobs.xlsx')
+df_all_jobs.to_csv('processed-data/all_jobs.csv')
+df_all_jobs.to_excel('processed-data/all_jobs.xlsx')
 
-df_scientist.to_csv('../processed-data/data_scientist.csv')
-df_scientist.to_excel('../processed-data/data_scientist.xlsx')
+df_scientist.to_csv('processed-data/data_scientist.csv')
+df_scientist.to_excel('processed-data/data_scientist.xlsx')
 
-df_engineer.to_csv('../processed-data/data_engineer.csv')
-df_engineer.to_excel('../processed-data/data_engineer.xlsx')
+df_engineer.to_csv('processed-data/data_engineer.csv')
+df_engineer.to_excel('processed-data/data_engineer.xlsx')
 
-df_glassdoor.to_csv('../processed-data/glassdoor_jobs.csv')
-df_glassdoor.to_excel('../processed-data/glassdoor_jobs.xlsx')
+df_glassdoor.to_csv('processed-data/glassdoor_jobs.csv')
+df_glassdoor.to_excel('processed-data/glassdoor_jobs.xlsx')
 
-df_full.to_csv('../processed-data/df_full.csv')
-df_full.to_excel('../processed-data/df_full.xlsx')
+df_full.to_csv('processed-data/df_full.csv')
+df_full.to_excel('processed-data/df_full.xlsx')
 
-df.to_csv('../processed-data/df.csv')
-df.to_excel('../processed-data/df.xlsx')
+df.to_csv('processed-data/df.csv')
+df.to_excel('processed-data/df.xlsx')
