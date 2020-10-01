@@ -1,1 +1,1 @@
-emr,lambda,ec2,iam,sagemaker
+emr,lambda,ec2,iam,sagemaker,glue
