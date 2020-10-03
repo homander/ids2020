@@ -1,0 +1,17 @@
+{
+'sql':0,
+'python':1,
+'java':2,
+'scala':3,
+'ruby':4,
+'perl':5,
+'ada':6,
+'cobol':7,
+'javascript':8,
+'vba':9,
+'matlab':10,
+'php':11,
+'typescript':12,
+'julia':13,
+'r':14
+}

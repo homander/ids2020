@@ -1,0 +1,10 @@
+{
+'json':0,
+'xml':1,
+'avro':2,
+'parquet':3,
+'yaml':4,
+'csv':5,
+'css':6,
+'html':7
+}

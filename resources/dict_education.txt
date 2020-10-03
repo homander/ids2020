@@ -1,0 +1,4 @@
+{
+'master degree':0,
+'bachelor degree':1
+}

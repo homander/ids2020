@@ -1,0 +1,7 @@
+{
+'aws':0,
+'amazon web services':1,
+'gcp':2,
+'google cloud platform':3,
+'azure':4
+}

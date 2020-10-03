@@ -1,0 +1,20 @@
+{
+'tensorflow':0,
+'sparkml':1,
+'spark':2,
+'hadoop':3,
+'pig':4,
+'scikit':5,
+'numpy':6,
+'mapreduce':7,
+'nlp':8,
+'pandas':9,
+'pytorch':10,
+'pyspark':11,
+'keras':12,
+'geopandas':13,
+'zeppelin':14,
+'jupyter':15,
+'machine learning':16,
+'artificial intelligence':17
+}

@@ -1,0 +1,11 @@
+{
+'kafka':0,
+'flink':1,
+'kinesis':2,
+'dataflow':3,
+'glue':4,
+'emr':5,
+'etl':6,
+'sas':7,
+'data factory':8
+}
