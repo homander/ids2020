@@ -58,7 +58,7 @@ def count_skills(vectorizer, doc_list):
     return results
 
 
-jobs = pd.read_csv('processed-data\df_cleaned.csv')
+jobs = pd.read_csv('processed-data/df_cleaned.csv')
 jobs['description_lemmatized'] = jobs['Skills required'].apply(lemmatizing_preprocessor)
 non_lemmatized_data = jobs['Skills required'].to_list()
 lemmatized_data = jobs['description_lemmatized'].to_list()
