@@ -4,7 +4,7 @@ import pandas as pd
 import string
 import nltk
 
-all_columns = pd.read_csv('processed-data\df_cleaned.csv')
+all_columns = pd.read_csv('processed-data/df_cleaned.csv')
 
 jds = pd.DataFrame(all_columns['Skills required'])
 
