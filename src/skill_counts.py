@@ -1,7 +1,7 @@
 import pandas as pd
 import regex as re
 
-jobs = pd.read_csv('processed-data\df_cleaned.csv')
+jobs = pd.read_csv('processed-data/df_cleaned.csv')
 
 # rename column and remove punctuation - these to the cleanup job instead of here?
 jobs.rename(columns={'Skills required': 'description'}, inplace=True)
