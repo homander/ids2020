@@ -13,7 +13,7 @@ def extract_numbers(x, y):
 #######################################
 
 # Import preprocessed CSV file
-df = pd.read_csv('processed-data/df.csv')
+df = pd.read_csv('processed-data/df_filtered.csv')
 
 # Define number of working hours per year in US for the cases with 'Per hour' salary data
 hours = 1768
