@@ -16,7 +16,7 @@ def mask(x):
 
 
 # Import preprocessed CSV file
-df = pd.read_csv('processed-data/df_cleaning_2.csv')
+df = pd.read_csv('processed-data/df_cleaning_2.csv', index_col=0)
 
 #########################################################################
 # Form a table with statistics of trigger words frequency in Job Title #
@@ -125,7 +125,7 @@ print(f"\nAvg.words in ad after cleaning Job Description:\n"
       f"analytics - {number_data_analyst} ({number_data_analyst / triggers['data analyst'].iloc[0]:.2%}), ")
 
 # Drop temporary columns:
-df.drop(columns=df.columns[[23, 22, 21, 20, 19, 18, 17, 16, 0]], inplace=True)
+df.drop(columns=df.columns[[23, 22, 21, 20, 19, 18, 17, 16]], inplace=True)
 
 # Create new dataframe without nan values in Skills required column (loosing 1-2% of entries)
 df_cleaned = df.dropna(axis=0, how='any').reset_index(drop=True)

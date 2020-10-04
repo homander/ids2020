@@ -13,37 +13,52 @@ print(f'Found {df.shape[0]} jobs, out of which')
 
 if FILTER_LEVEL == 0:
     # Require an exact match
-    df_scientist = df[df['Job Title'].str.lower() == 'data scientist']
-    df_engineer = df[df['Job Title'].str.lower() == 'data engineer']
-    df_analyst = df[df['Job Title'].str.lower() == 'data analyst']
+    scientist = df['Job Title'].str.lower() == 'data scientist'
+    engineer = df['Job Title'].str.lower() == 'data engineer'
+    analyst = df['Job Title'].str.lower() == 'data analyst'
 elif FILTER_LEVEL == 1:
     # Accept titles which include, for instance, the string "data scientist"
     # This catches titles such as "senior data scientist" and "NLP data scientist"
-    df_scientist = df[df['Job Title'].str.contains('data scientist', case=False)]
-    df_engineer = df[df['Job Title'].str.contains('data engineer', case=False)]
-    df_analyst = df[df['Job Title'].str.contains('data analyst', case=False)]
+    scientist = df['Job Title'].str.contains('data scientist', case=False)
+    engineer = df['Job Title'].str.contains('data engineer', case=False)
+    analyst = df['Job Title'].str.contains('data analyst', case=False)
 else:
     # Accept titles which include, for instance, the strings "data" and "scientist",
     # but not necessarily in that order. This catches titles such as "analyst, data"
     # Also, allow "machine learning" instead of "data".
     # In other words, include jobs where the title matches both
     # (data|machine learning) and (scientist|engineer|analyst)
-    df_data = df[df['Job Title'].str.contains('data', case=False) |
-                 df['Job Title'].str.contains('machine learning', case=False)]
+    data = (df['Job Title'].str.contains('data', case=False) |
+            df['Job Title'].str.contains('machine learning', case=False))
 
-    df_scientist = df_data[df_data['Job Title'].str.contains('scientist', case=False)]
-    df_engineer = df_data[df_data['Job Title'].str.contains('engineer', case=False)]
-    df_analyst = df_data[df_data['Job Title'].str.contains('analyst', case=False)]
+    scientist = data & df['Job Title'].str.contains('scientist', case=False)
+    engineer = data & df['Job Title'].str.contains('engineer', case=False)
+    analyst = data & df['Job Title'].str.contains('analyst', case=False)
 
-print(f'...{df_scientist.shape[0]} match "data scientist"')
-print(f'...{df_engineer.shape[0]} match "data engineer"')
-print(f'...{df_analyst.shape[0]} match "data analyst"')
+# Add "Job Type" column
+# Done in reverse order because some jobs match more than one category
+# So, for instance, jobs which match both "data scientist" and "data engineer"
+# get classified as "data scientist" jobs
+df.loc[analyst, 'Job Type'] = 'data analyst'
+df.loc[engineer, 'Job Type'] = 'data engineer'
+df.loc[scientist, 'Job Type'] = 'data scientist'
+
+# Drop jobs which don't match any of the specified types
+df = df[scientist | engineer | analyst]
+
+# Sort by job type
+df.sort_values(by='Job Type', ascending=False, inplace=True)
+df.reset_index(drop=True, inplace=True)
+
+# Print statistics (after accounting for multiple matches)
+scientist2 = df['Job Type'] == 'data scientist'
+engineer2 = df['Job Type'] == 'data engineer'
+analyst2 = df['Job Type'] == 'data analyst'
+print(f'...{scientist2.sum()} match "data scientist"')
+print(f'...{engineer2.sum()} match "data engineer"')
+print(f'...{analyst2.sum()} match "data analyst"')
 print(f'at filter level {FILTER_LEVEL}')
-
-# Concatenate and remove duplicates (jobs which matched more than one category)
-df = pd.concat([df_scientist, df_engineer, df_analyst], ignore_index=True)
-df.drop_duplicates(keep='first', inplace=True, ignore_index=True)
-print(f'After discarding duplicates, {df.shape[0]} jobs remain (in total)')
+print(f'A total of {df.shape[0]} jobs remain')
 
 df.to_csv('processed-data/df_filtered.csv')
 df.to_excel('processed-data/df_filtered.xlsx')
