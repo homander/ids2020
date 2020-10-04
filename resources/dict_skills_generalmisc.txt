@@ -1,0 +1,16 @@
+{
+'communication skill':0,
+'data quality':1,
+'data management':2,
+'metadata management':3,
+'data analysis':4,
+'data analytics':5,
+'data visualization':6,
+'data modeling':7,
+'data mining':8,
+'data governance':9,
+'data pipeline':10,
+'data integration':11,
+'data architecture':12,
+'data security':13
+}

@@ -1,0 +1,12 @@
+{
+'1 year experience':0,
+'2 year experience':1,
+'3 year experience':2,
+'4 year experience':3,
+'5 year experience':4,
+'6 year experience':5,
+'7 year experience':6,
+'8 year experience':7,
+'9 year experience':8,
+'10 year experience':9
+}
