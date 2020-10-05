@@ -16,5 +16,16 @@
 'zeppelin':14,
 'jupyter':15,
 'machine learning':16,
-'artificial intelligence':17
+'artificial intelligence':17,
+'tableau':18,
+'cognos':19,
+'powerbi':20,
+'talend':21,
+'informatica':22,
+'databricks':23,
+'kibana':24,
+'qlikview':25,
+'qlik':26,
+'netsuite':27,
+'sagemaker':28
 }
