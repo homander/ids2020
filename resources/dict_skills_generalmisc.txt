@@ -12,5 +12,7 @@
 'data pipeline':10,
 'data integration':11,
 'data architecture':12,
-'data security':13
+'data security':13,
+'master data':14, 
+'mdm':15
 }

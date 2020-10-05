@@ -153,7 +153,7 @@ ga_results.to_csv('processed-data/counts-skill-generalanalytics.csv')
 
 # extract general miscellaneous keywords
 gm_vocab = load_skills('resources/dict_skills_generalmisc.txt')
-gm_vectorizer = create_lemmatizing_vectorizer(gm_vocab, 2, 2,stopwords_list)
+gm_vectorizer = create_lemmatizing_vectorizer(gm_vocab, 1, 2,stopwords_list)
 gm_results = summarize_counts(gm_vectorizer, lemmatized_descriptions_per_type)
 gm_results.to_csv('processed-data/counts-skill-generalmisc.csv')
 
