@@ -1,0 +1,11 @@
+{
+'docker':0,
+'kubernetes':1,
+'mesos':2,
+'vagrant':3,
+'virtualbox':4,
+'vmware':5,
+'yarn':6,
+'zookeeper':7,
+'jenkins':8
+}
