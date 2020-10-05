@@ -69,84 +69,96 @@ def count_skills(vectorizer, doc_list):
 
     return results
 
-#check command line arguments
-if len(sys.argv) != 2:
-    print('Wrong number of arguments.')
-    exit()
 
-job_title = sys.argv[1]
-if job_title not in ('analyst', 'engineer', 'scientist'):
-    print('Argument not recognized.')
-    exit()
+# count skills with given vectorizer and data (list of documents, one for each job type)
+# produces a pandas dataframe with counts
+def summarize_counts(vectorizer, doc_lists):
+
+    counts = []
+    for doc_list in doc_lists:
+        count_vector = vectorizer.fit_transform(doc_list)
+        counts.append(count_vector.getnnz(axis=0))
+
+    feature_names = vectorizer.get_feature_names()
+    results = pd.DataFrame({'Skill': feature_names, 'Analyst Count': counts[0], 'Engineer Count': counts[1], 'Scientist Count': counts[2]})
+    results['Analyst Frequency'] = round( (results['Analyst Count'] / len(doc_lists[0]))*100, 2 )
+    results['Engineer Frequency'] = round( (results['Engineer Count'] / len(doc_lists[1]))*100, 2 )
+    results['Scientist Frequency'] = round( (results['Scientist Count'] / len(doc_lists[2]))*100, 2 )
+
+    return results
 
 #load data
 jobs = pd.read_csv('processed-data/df_filtered.csv')
 
-#take only rows for the given job type
-if(job_title == 'analyst'):
-    jobs = jobs[ jobs['Job Type'] == 'data analyst' ]
-elif(job_title == 'engineer'):
-    jobs = jobs[ jobs['Job Type'] == 'data engineer' ]
-elif(job_title == 'scientist'):
-    jobs = jobs[ jobs['Job Type'] == 'data scientist']
-
-#lemmatize job descriptions to get base form
+#lemmatize job descriptions to get base form for some counts
 jobs['description_lemmatized'] = jobs['Job Description'].apply(lemmatizing_preprocessor)
-non_lemmatized_data = jobs['Job Description'].to_list()
-lemmatized_data = jobs['description_lemmatized'].to_list()
+
+analyst_listings = jobs[ jobs['Job Type'] == 'data analyst' ]
+engineer_listings = jobs[ jobs['Job Type'] == 'data engineer' ]
+scientist_listings = jobs[ jobs['Job Type'] == 'data scientist']
+
+descriptions_per_type = []
+descriptions_per_type.append( analyst_listings['Job Description'].to_list() )
+descriptions_per_type.append( engineer_listings['Job Description'].to_list() )
+descriptions_per_type.append( scientist_listings['Job Description'].to_list() )
+
+lemmatized_descriptions_per_type = []
+lemmatized_descriptions_per_type.append( analyst_listings['description_lemmatized'].to_list() )
+lemmatized_descriptions_per_type.append( engineer_listings['description_lemmatized'].to_list() )
+lemmatized_descriptions_per_type.append( scientist_listings['description_lemmatized'].to_list() )
 
 stopwords_list = load_stopwords_list()
 
 # extract education
 ed_vocab = load_skills('resources/dict_education.txt')
 ed_vectorizer = create_lemmatizing_vectorizer(ed_vocab, 2, 2,stopwords_list)
-ed_results = count_skills(ed_vectorizer, lemmatized_data)
-ed_results.to_csv('processed-data/'+job_title+'-counts-education.csv')
+ed_results = summarize_counts(ed_vectorizer, lemmatized_descriptions_per_type)
+ed_results.to_csv('processed-data/counts-education.csv')
 
 # extract experience
 exp_vocab = load_skills('resources/dict_experience.txt')
 exp_vectorizer = create_lemmatizing_vectorizer(exp_vocab, 3, 3,stopwords_list)
-exp_results = count_skills(exp_vectorizer, lemmatized_data)
-exp_results.to_csv('processed-data/'+job_title+'-counts-experience.csv')
+exp_results = summarize_counts(exp_vectorizer, lemmatized_descriptions_per_type)
+exp_results.to_csv('processed-data/counts-experience.csv')
 
 # extract datastore skills
 db_vocab = load_skills('resources/dict_skills_datastores.txt')
 db_vectorizer = create_nonlemma_vectorizer(db_vocab, 1, 2,stopwords_list)
-db_results = count_skills(db_vectorizer, non_lemmatized_data)
-db_results.to_csv('processed-data/'+job_title+'-counts-skill-datastores.csv')
+db_results = summarize_counts(db_vectorizer, descriptions_per_type)
+db_results.to_csv('processed-data/counts-skill-datastores.csv')
 
 # extract cloud providers
 cp_vocab = load_skills('resources/dict_skills_cloudproviders.txt')
 cp_vectorizer = create_lemmatizing_vectorizer(cp_vocab, 1, 3,stopwords_list)
-cp_results = count_skills(cp_vectorizer, non_lemmatized_data)
-cp_results.to_csv('processed-data/'+job_title+'-counts-skill-cloudproviders.csv')
+cp_results = summarize_counts(cp_vectorizer, descriptions_per_type)
+cp_results.to_csv('processed-data/counts-skill-cloudproviders.csv')
 
 # extract data formats
 df_vocab = load_skills('resources/dict_skills_dataformats.txt')
 df_vectorizer = create_lemmatizing_vectorizer(df_vocab, 1, 1,stopwords_list)
-df_results = count_skills(df_vectorizer, non_lemmatized_data)
-df_results.to_csv('processed-data/'+job_title+'-counts-skill-dataformats.csv')
+df_results = summarize_counts(df_vectorizer, descriptions_per_type)
+df_results.to_csv('processed-data/counts-skill-dataformats.csv')
 
 # extract data pipelines
 dp_vocab = load_skills('resources/dict_skills_datapipelines.txt')
 dp_vectorizer = create_lemmatizing_vectorizer(dp_vocab, 1, 2,stopwords_list)
-dp_results = count_skills(dp_vectorizer, non_lemmatized_data)
-dp_results.to_csv('processed-data/'+job_title+'-counts-skill-datapipelines.csv')
+dp_results = summarize_counts(dp_vectorizer, descriptions_per_type)
+dp_results.to_csv('processed-data/counts-skill-datapipelines.csv')
 
 # extract general data analytics skills / keywords
 ga_vocab = load_skills('resources/dict_skills_generalanalytics.txt')
 ga_vectorizer = create_lemmatizing_vectorizer(ga_vocab, 1, 2,stopwords_list)
-ga_results = count_skills(ga_vectorizer, non_lemmatized_data)
-ga_results.to_csv('processed-data/'+job_title+'-counts-skill-generalanalytics.csv')
+ga_results = summarize_counts(ga_vectorizer, descriptions_per_type)
+ga_results.to_csv('processed-data/counts-skill-generalanalytics.csv')
 
 # extract general miscellaneous keywords
 gm_vocab = load_skills('resources/dict_skills_generalmisc.txt')
 gm_vectorizer = create_lemmatizing_vectorizer(gm_vocab, 2, 2,stopwords_list)
-gm_results = count_skills(gm_vectorizer, lemmatized_data)
-gm_results.to_csv('processed-data/'+job_title+'-counts-skill-generalmisc.csv')
+gm_results = summarize_counts(gm_vectorizer, lemmatized_descriptions_per_type)
+gm_results.to_csv('processed-data/counts-skill-generalmisc.csv')
 
 # extract programming languages
 pl_vocab = load_skills('resources/dict_skills_programminglanguages.txt')
 pl_vectorizer = create_lemmatizing_vectorizer(pl_vocab, 1, 1,stopwords_list)
-pl_results = count_skills(pl_vectorizer, non_lemmatized_data)
-pl_results.to_csv('processed-data/'+job_title+'-counts-skill-programminglanguages.csv')
+pl_results = summarize_counts(pl_vectorizer, descriptions_per_type)
+pl_results.to_csv('processed-data/counts-skill-programminglanguages.csv')
