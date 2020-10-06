@@ -162,3 +162,9 @@ pl_vocab = load_skills('resources/dict_skills_programminglanguages.txt')
 pl_vectorizer = create_lemmatizing_vectorizer(pl_vocab, 1, 1,stopwords_list)
 pl_results = summarize_counts(pl_vectorizer, descriptions_per_type)
 pl_results.to_csv('processed-data/counts-skill-programminglanguages.csv')
+
+# extract devops related skills
+do_vocab = load_skills('resources/dict_skills_devops.txt')
+do_vectorizer = create_lemmatizing_vectorizer(do_vocab, 1, 1,stopwords_list)
+do_results = summarize_counts(do_vectorizer, descriptions_per_type)
+do_results.to_csv('processed-data/counts-skill-devops.csv')
