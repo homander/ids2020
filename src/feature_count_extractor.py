@@ -176,3 +176,40 @@ do_vocab = load_skills('resources/dict_skills_devops.txt')
 do_vectorizer = create_lemmatizing_vectorizer(do_vocab, 1, 1,stopwords_list)
 do_results = summarize_counts(do_vectorizer, descriptions_per_type)
 do_results.to_csv('processed-data/'+year+'-counts-skill-devops.csv')
+
+
+############################
+# Compute X (for modeling) #
+############################
+
+desc = jobs['Job Description']
+desc_lem = jobs['description_lemmatized']
+
+ed_count_vector = ed_vectorizer.fit_transform(desc_lem)
+exp_count_vector = exp_vectorizer.fit_transform(desc_lem)
+db_count_vector = db_vectorizer.fit_transform(desc)
+cp_count_vector = cp_vectorizer.fit_transform(desc)
+df_count_vector = df_vectorizer.fit_transform(desc)
+dp_count_vector = dp_vectorizer.fit_transform(desc)
+ga_count_vector = ga_vectorizer.fit_transform(desc)
+gm_count_vector = gm_vectorizer.fit_transform(desc)
+pl_count_vector = pl_vectorizer.fit_transform(desc)
+do_count_vector = do_vectorizer.fit_transform(desc)
+
+ed_X = pd.DataFrame(ed_count_vector.toarray(), columns=ed_vectorizer.get_feature_names())
+exp_X = pd.DataFrame(exp_count_vector.toarray(), columns=exp_vectorizer.get_feature_names())
+db_X = pd.DataFrame(db_count_vector.toarray(), columns=db_vectorizer.get_feature_names())
+cp_X = pd.DataFrame(cp_count_vector.toarray(), columns=cp_vectorizer.get_feature_names())
+df_X = pd.DataFrame(df_count_vector.toarray(), columns=df_vectorizer.get_feature_names())
+dp_X = pd.DataFrame(dp_count_vector.toarray(), columns=dp_vectorizer.get_feature_names())
+ga_X = pd.DataFrame(ga_count_vector.toarray(), columns=ga_vectorizer.get_feature_names())
+gm_X = pd.DataFrame(gm_count_vector.toarray(), columns=gm_vectorizer.get_feature_names())
+pl_X = pd.DataFrame(pl_count_vector.toarray(), columns=pl_vectorizer.get_feature_names())
+do_X = pd.DataFrame(do_count_vector.toarray(), columns=do_vectorizer.get_feature_names())
+
+X = pd.concat([ed_X, exp_X, db_X, cp_X, df_X, dp_X, ga_X, gm_X, pl_X, do_X], axis=1)
+
+# Convert the counts to binary yes/no values
+X[X > 0] = 1
+
+X.to_csv(f'processed-data/{year}-X.csv')
