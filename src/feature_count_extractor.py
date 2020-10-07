@@ -87,8 +87,16 @@ def summarize_counts(vectorizer, doc_lists):
 
     return results
 
+
+if len(sys.argv) != 3:
+    print('Wrong number of arguments.')
+    exit()
+
+file_name = sys.argv[1]
+year = sys.argv[2]
+
 #load data
-jobs = pd.read_csv('processed-data/df_filtered.csv')
+jobs = pd.read_csv('processed-data/'+file_name)
 
 #lemmatize job descriptions to get base form for some counts
 jobs['description_lemmatized'] = jobs['Job Description'].apply(lemmatizing_preprocessor)
@@ -113,58 +121,58 @@ stopwords_list = load_stopwords_list()
 ed_vocab = load_skills('resources/dict_education.txt')
 ed_vectorizer = create_lemmatizing_vectorizer(ed_vocab, 2, 2,stopwords_list)
 ed_results = summarize_counts(ed_vectorizer, lemmatized_descriptions_per_type)
-ed_results.to_csv('processed-data/counts-education.csv')
+ed_results.to_csv('processed-data/'+year+'-counts-education.csv')
 
 # extract experience
 exp_vocab = load_skills('resources/dict_experience.txt')
 exp_vectorizer = create_lemmatizing_vectorizer(exp_vocab, 3, 3,stopwords_list)
 exp_results = summarize_counts(exp_vectorizer, lemmatized_descriptions_per_type)
-exp_results.to_csv('processed-data/counts-experience.csv')
+exp_results.to_csv('processed-data/'+year+'-counts-experience.csv')
 
 # extract datastore skills
 db_vocab = load_skills('resources/dict_skills_datastores.txt')
 db_vectorizer = create_nonlemma_vectorizer(db_vocab, 1, 2,stopwords_list)
 db_results = summarize_counts(db_vectorizer, descriptions_per_type)
-db_results.to_csv('processed-data/counts-skill-datastores.csv')
+db_results.to_csv('processed-data/'+year+'-counts-skill-datastores.csv')
 
 # extract cloud providers
 cp_vocab = load_skills('resources/dict_skills_cloudproviders.txt')
 cp_vectorizer = create_lemmatizing_vectorizer(cp_vocab, 1, 3,stopwords_list)
 cp_results = summarize_counts(cp_vectorizer, descriptions_per_type)
-cp_results.to_csv('processed-data/counts-skill-cloudproviders.csv')
+cp_results.to_csv('processed-data/'+year+'-counts-skill-cloudproviders.csv')
 
 # extract data formats
 df_vocab = load_skills('resources/dict_skills_dataformats.txt')
 df_vectorizer = create_lemmatizing_vectorizer(df_vocab, 1, 1,stopwords_list)
 df_results = summarize_counts(df_vectorizer, descriptions_per_type)
-df_results.to_csv('processed-data/counts-skill-dataformats.csv')
+df_results.to_csv('processed-data/'+year+'-counts-skill-dataformats.csv')
 
 # extract data pipelines
 dp_vocab = load_skills('resources/dict_skills_datapipelines.txt')
 dp_vectorizer = create_lemmatizing_vectorizer(dp_vocab, 1, 2,stopwords_list)
 dp_results = summarize_counts(dp_vectorizer, descriptions_per_type)
-dp_results.to_csv('processed-data/counts-skill-datapipelines.csv')
+dp_results.to_csv('processed-data/'+year+'-counts-skill-datapipelines.csv')
 
 # extract general data analytics skills / keywords
 ga_vocab = load_skills('resources/dict_skills_generalanalytics.txt')
 ga_vectorizer = create_lemmatizing_vectorizer(ga_vocab, 1, 2,stopwords_list)
 ga_results = summarize_counts(ga_vectorizer, descriptions_per_type)
-ga_results.to_csv('processed-data/counts-skill-generalanalytics.csv')
+ga_results.to_csv('processed-data/'+year+'-counts-skill-generalanalytics.csv')
 
 # extract general miscellaneous keywords
 gm_vocab = load_skills('resources/dict_skills_generalmisc.txt')
 gm_vectorizer = create_lemmatizing_vectorizer(gm_vocab, 1, 2,stopwords_list)
 gm_results = summarize_counts(gm_vectorizer, lemmatized_descriptions_per_type)
-gm_results.to_csv('processed-data/counts-skill-generalmisc.csv')
+gm_results.to_csv('processed-data/'+year+'-counts-skill-generalmisc.csv')
 
 # extract programming languages
 pl_vocab = load_skills('resources/dict_skills_programminglanguages.txt')
 pl_vectorizer = create_lemmatizing_vectorizer(pl_vocab, 1, 1,stopwords_list)
 pl_results = summarize_counts(pl_vectorizer, descriptions_per_type)
-pl_results.to_csv('processed-data/counts-skill-programminglanguages.csv')
+pl_results.to_csv('processed-data/'+year+'-counts-skill-programminglanguages.csv')
 
 # extract devops related skills
 do_vocab = load_skills('resources/dict_skills_devops.txt')
 do_vectorizer = create_lemmatizing_vectorizer(do_vocab, 1, 1,stopwords_list)
 do_results = summarize_counts(do_vectorizer, descriptions_per_type)
-do_results.to_csv('processed-data/counts-skill-devops.csv')
+do_results.to_csv('processed-data/'+year+'-counts-skill-devops.csv')

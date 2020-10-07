@@ -1,4 +1,5 @@
 import pandas as pd
+import sys
 
 # Filters jobs by their title to include only jobs which
 # are similar to data scientist/engineer/analyst.
@@ -8,7 +9,13 @@ import pandas as pd
 # A value between 0 (most strict) and 2 (least strict, default)
 FILTER_LEVEL = 2
 
-df = pd.read_csv('processed-data/df.csv', index_col=0)
+if len(sys.argv) != 2:
+    print('Wrong number of arguments.')
+    exit()
+
+file_name = sys.argv[1]
+
+df = pd.read_csv('processed-data/'+file_name, index_col=0)
 print(f'Found {df.shape[0]} jobs, out of which')
 
 if FILTER_LEVEL == 0:
@@ -60,5 +67,7 @@ print(f'...{analyst2.sum()} match "data analyst"')
 print(f'at filter level {FILTER_LEVEL}')
 print(f'A total of {df.shape[0]} jobs remain')
 
-df.to_csv('processed-data/df_filtered.csv')
-df.to_excel('processed-data/df_filtered.xlsx')
+file_name = file_name[0: file_name.index('.')]
+
+df.to_csv('processed-data/'+file_name+'_filtered''.csv')
+df.to_excel('processed-data/'+file_name+'_filtered.xlsx')
