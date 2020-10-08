@@ -1,34 +1,57 @@
-from sklearn.feature_extraction.text import CountVectorizer
 import plotly.express as px
-import numpy as np
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 import seaborn as sns
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+plt.rcParams.update({'figure.max_open_warning': 0})
 
 # Import preprocessed CSV file
-df = pd.read_csv('processed-data/df_prepared_for_visualisation.csv', index_col=0)
+df = pd.read_csv('processed-data/df_cleaned_for_visualisation.csv', index_col=0)
 
-#########################################
-# VISUALIZATION PART (will be extended) #
-#########################################
+######################
+# VISUALIZATION PART #
+######################
 
+df1 = df[['Min Salary', 'Max Salary', 'Avg Salary', 'Job Type', 'Sector', 'Rating']]
+
+# Treemap diagram
 df["US"] = "United States"
 fig = px.treemap(df, path=['US', 'Location State', 'Location City'], values='Avg Salary')
 fig.show()
 
+
+# SALARY DISTRIBUTION: MIN AND MAX
+sns.displot(df1, x='Min Salary', hue='Job Type', bins=20, element="step")
+plt.title('Min Salary distribution in US')
+plt.tight_layout()
+plt.savefig("visualisation/min salary.png")
+
+sns.displot(df1, x='Max Salary', hue='Job Type', bins=20, element="step")
+plt.title('Max Salary distribution in US')
+plt.tight_layout()
+plt.savefig("visualisation/max salary.png")
+
+sns.catplot(x='Job Type', y='Avg Salary', kind="box", data=df1)
+plt.title('Average Salary distribution in US')
+plt.tight_layout()
+plt.savefig("visualisation/avg salary.png")
+
 # Explore Company's rating and average salary correlation
-plt.scatter(df['Rating'], df['Avg Salary'])
-plt.xlabel("Avg Salary")
-plt.ylabel("Company's Rating")
+g = sns.FacetGrid(df1, hue='Job Type')
+g.map(sns.scatterplot, 'Avg Salary', 'Rating', alpha=.6)
+g.add_legend()
+plt.title('Max Salary distribution in US')
+plt.title("Company's rating and average salary correlation")
+plt.tight_layout()
 plt.savefig("visualisation/rating_salary_correlation.png")
 
 # Show salary distribution
-plt.figure(figsize=(15, 5))
+plt.figure(figsize=(10, 5))
 sns.distplot(df['Min Salary'], color="b")
 sns.distplot(df['Max Salary'], color="r")
-plt.xlabel("Salary in US")
+plt.xlabel("Salary in USD")
 plt.legend({'Min Salary': df['Min Salary'], 'Max Salary': df['Max Salary']})
 plt.title("Distribution of Salary in US", fontsize=15)
 plt.tight_layout()
@@ -37,11 +60,12 @@ plt.savefig("visualisation/salary_distribution.png")
 # Most popular job titles
 plt.subplots(figsize=(10, 5))
 sns.barplot(x=df['Job Title'].value_counts()[0:10].index, y=df['Job Title'].value_counts()[0:10])
-plt.xlabel('Job Title', fontsize=5)
+plt.xlabel('Job Title', fontsize=10)
 plt.ylabel('Job Count', fontsize=10)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
 plt.title('Top 10 Job Titles')
+plt.tight_layout()
 plt.savefig("visualisation/most_popular_job_titles.png")
 
 sector_count = pd.DataFrame(df['Sector'].value_counts()[0:10])
@@ -51,17 +75,16 @@ ownership_count = pd.DataFrame(df['Type of ownership'].value_counts()[0:5])
 company_count = pd.DataFrame(df['Company Name'].value_counts()[0:10])
 
 # Top 5 Types of Ownership of The Companies Searching for DS-employees
-plt.style.use('seaborn')
 plt.subplots(figsize=(8, 5))
 labels = ownership_count.index
 sizes = ownership_count['Type of ownership']
 pie = plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
 plt.title('Top 5 Types of Ownership of The Companies Searching for DS-employees')
+plt.tight_layout()
 plt.savefig("visualisation/top5_types_ownership.png")
 
 # Top 10 Sectors with Data-related Job Posts
-plt.style.use('seaborn')
-plt.subplots(figsize=(8, 5))
+plt.figure(figsize=(8, 5))
 labels = sector_count.index
 sizes = sector_count['Sector']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
@@ -69,8 +92,7 @@ plt.title('Top 10 Sectors with Data-related Job Posts')
 plt.savefig("visualisation/top10_sectors.png")
 
 # Top 10 Industries Searching for DS-employees
-plt.style.use('seaborn')
-plt.subplots(figsize=(8, 5))
+plt.figure(figsize=(8, 5))
 labels = industry_count.index
 sizes = industry_count['Industry']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
@@ -78,8 +100,7 @@ plt.title('Top 10 Industries Searching for DS-employees')
 plt.savefig("visualisation/top10_industries.png")
 
 # Top 10 Companies Searching for DS-employees
-plt.style.use('seaborn')
-plt.subplots(figsize=(8, 5))
+plt.figure(figsize=(8, 5))
 labels = company_count.index
 sizes = company_count['Company Name']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
@@ -87,15 +108,14 @@ plt.title('Top 10 Companies Searching for DS-employees')
 plt.savefig("visualisation/top10_companies.png")
 
 # Top 10 Cities in US with Data-related Jobs
-plt.style.use('seaborn')
-plt.subplots(figsize=(8, 5))
+plt.figure(figsize=(8, 5))
 labels = city_count.index
 sizes = city_count['Location City']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
 plt.title('Top 10 Cities in US with Data-related Jobs')
 plt.savefig("visualisation/top10_cities.png")
 
-plt.subplots(figsize=(15, 15))
+plt.figure(figsize=(8, 5))
 wc = WordCloud()
 text = df['Job Title']
 wc.generate(str(' '.join(text)))
@@ -103,7 +123,7 @@ plt.imshow(wc)
 plt.axis("off")
 plt.savefig("visualisation/wordcloud_job_titles.png")
 
-plt.subplots(figsize=(15, 15))
+plt.figure(figsize=(8, 5))
 wc = WordCloud()
 text = df['Skills required']
 wc.generate(str(' '.join(text)))
@@ -111,108 +131,358 @@ plt.imshow(wc)
 plt.axis("off")
 plt.savefig("visualisation/wordcloud_skills_required.png")
 
-experience_education = ["bs", "ms", "phd", "full-time", "intern", "bachelor", "remote", "master", "doctorate",
-                        "computer science", "data science"]
-skills_languages = ["r", "python", "scala", "ruby", "c++", "java", "perl", "ada", "cobol", "javascript", "vba",
-                    "typescript",
-                    "php", "matlab", "julia", "html", "bash"]
-skills_big_cloud_data = ["hadoop", "spark", "impala", "cassandra", "kafka", "hdfs", "hbase", "hive", "aws", "gcp",
-                         "azure", "s3", "redshift", "ec2", "lambda", "route s3", "dynamo"]
-skills_machine_learning = ["time series", "machine learning", "regression", "stat", "numpy", "pandas",
-                           "data visualization",
-                           "data analysis", "data cleaning", "deep learning"]
 
-# Top 10 Most Demanded Education Features
-vect = CountVectorizer(vocabulary=experience_education)
-experience_education_count = pd.Series(np.ravel((vect.fit_transform(df['Skills_lem']).sum(axis=0))),
-                                       index=vect.get_feature_names()).sort_values(ascending=False)
-plt.subplots(figsize=(10, 5))
-sns.barplot(x=experience_education_count[0:10].index, y=experience_education_count[0:10])
-plt.xlabel('Education/Experience', fontsize=5)
-plt.ylabel('Count', fontsize=10)
+###############################
+# MERGING SKILLS IN ONE TABLE #
+###############################
+
+# Import and concatenating in one table programming languages skills
+lang20 = pd.read_csv('processed-data/2020-counts-skill-programminglanguages.csv', index_col=0)
+lang20['Year'] = '2020'
+lang19 = pd.read_csv('processed-data/2019-counts-skill-programminglanguages.csv', index_col=0)
+lang19['Year'] = '2019'
+lang = pd.concat([lang20, lang19])
+lang['Type'] = 'Programming Languages'
+
+# Import and concatenating in one table general skills
+general20 = pd.read_csv('processed-data/2020-counts-skill-generalmisc.csv', index_col=0)
+general20['Year'] = '2020'
+general19 = pd.read_csv('processed-data/2019-counts-skill-generalmisc.csv', index_col=0)
+general19['Year'] = '2019'
+general = pd.concat([general20, general19])
+general['Type'] = 'General'
+
+# Import and concatenating in one table general analytics skills
+generalanalytics20 = pd.read_csv('processed-data/2020-counts-skill-generalanalytics.csv', index_col=0)
+generalanalytics20['Year'] = '2020'
+generalanalytics19 = pd.read_csv('processed-data/2019-counts-skill-generalanalytics.csv', index_col=0)
+generalanalytics19['Year'] = '2019'
+generalanalytics = pd.concat([generalanalytics20, generalanalytics19])
+generalanalytics['Type'] = 'General Analytics'
+
+# Import and concatenating in one table devops skills
+devops20 = pd.read_csv('processed-data/2020-counts-skill-devops.csv', index_col=0)
+devops20['Year'] = '2020'
+devops19 = pd.read_csv('processed-data/2019-counts-skill-devops.csv', index_col=0)
+devops19['Year'] = '2019'
+devops = pd.concat([devops20, devops19])
+devops['Type'] = 'Devops'
+
+# Import and concatenating in one table datastore skills
+datastore20 = pd.read_csv('processed-data/2020-counts-skill-datastores.csv', index_col=0)
+datastore20['Year'] = '2020'
+datastore19 = pd.read_csv('processed-data/2019-counts-skill-datastores.csv', index_col=0)
+datastore19['Year'] = '2019'
+datastore = pd.concat([datastore20, datastore19])
+datastore['Type'] = 'Datastore'
+
+# Import and concatenating in one table datapipelines skills
+datapipelines20 = pd.read_csv('processed-data/2020-counts-skill-datapipelines.csv', index_col=0)
+datapipelines20['Year'] = '2020'
+datapipelines19 = pd.read_csv('processed-data/2019-counts-skill-datapipelines.csv', index_col=0)
+datapipelines19['Year'] = '2019'
+datapipelines = pd.concat([datapipelines20, datapipelines19])
+datapipelines['Type'] = 'Datapipelines'
+
+# Import and concatenating in one table dataformats skills
+dataformats20 = pd.read_csv('processed-data/2020-counts-skill-dataformats.csv', index_col=0)
+dataformats20['Year'] = '2020'
+dataformats19 = pd.read_csv('processed-data/2019-counts-skill-dataformats.csv', index_col=0)
+dataformats19['Year'] = '2019'
+dataformats = pd.concat([dataformats20, dataformats19])
+dataformats['Type'] = 'Dataformats'
+
+# Import and concatenating in one table cloud skills
+cloud20 = pd.read_csv('processed-data/2020-counts-skill-cloudproviders.csv', index_col=0)
+cloud20['Year'] = '2020'
+cloud19 = pd.read_csv('processed-data/2019-counts-skill-cloudproviders.csv', index_col=0)
+cloud19['Year'] = '2019'
+cloud = pd.concat([cloud20, cloud19])
+cloud['Type'] = 'Cloud'
+
+# Import and concatenating in one table experience skills
+experience20 = pd.read_csv('processed-data/2020-counts-experience.csv', index_col=0)
+experience20['Year'] = '2020'
+experience19 = pd.read_csv('processed-data/2019-counts-experience.csv', index_col=0)
+experience19['Year'] = '2019'
+experience = pd.concat([experience20, experience19])
+experience['Type'] = 'Experience'
+
+# Import and concatenating in one table education skills
+education20 = pd.read_csv('processed-data/2020-counts-education.csv', index_col=0)
+education20['Year'] = '2020'
+education19 = pd.read_csv('processed-data/2019-counts-education.csv', index_col=0)
+education19['Year'] = '2019'
+education = pd.concat([education20, education19])
+education['Type'] = 'Education'
+
+# Form single table of skills required with year, type of skill and type of job info
+skills = pd.concat([education, experience, cloud, dataformats, datapipelines, datastore, devops, generalanalytics, general, lang])
+skills_a = pd.DataFrame(skills[['Skill', 'Analyst Count', 'Analyst Frequency', 'Year', 'Type']])
+skills_a.rename(columns={'Analyst Count': 'Count', 'Analyst Frequency': 'Frequency'}, inplace=True)
+skills_a['Job Type'] = 'Data Analyst'
+skills_e = pd.DataFrame(skills[['Skill', 'Engineer Count', 'Engineer Frequency', 'Year', 'Type']])
+skills_e.rename(columns={'Engineer Count': 'Count', 'Engineer Frequency': 'Frequency'}, inplace=True)
+skills_e['Job Type'] = 'Data Engineer'
+skills_s = pd.DataFrame(skills[['Skill', 'Scientist Count', 'Scientist Frequency', 'Year', 'Type']])
+skills_s.rename(columns={'Scientist Count': 'Count', 'Scientist Frequency': 'Frequency'}, inplace=True)
+skills_s['Job Type'] = 'Data Scientist'
+skills = pd.concat([skills_a, skills_e, skills_s]).reset_index(drop=True).sort_values(by='Count', ascending=False)
+
+# Save to file skills tables
+skills.to_csv('processed-data/skills.csv')
+skills.to_excel('processed-data/skills.xlsx')
+
+
+###############################################
+# TRENDS IN SKILLS IN DEMAND (DATA SCIENTIST) #
+###############################################
+
+# Programming Languages In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Type'] == 'Programming Languages') & (skills['Job Type'] == 'Data Scientist')]
+sns.barplot(x="Skill", y="Frequency", hue="Year", data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Top 10 Most Demanded Education Features')
-plt.savefig("visualisation/top10_education.png")
+plt.title('Programming Languages In Demand (Data Scientists): Trends')
+plt.xlabel('Programming Languages', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/programming_languages_trends.png")
 
-# Top 10 Most Demanded Programming Languages
-vect = CountVectorizer(vocabulary=skills_languages)
-skills_languages_count = pd.Series(np.ravel((vect.fit_transform(df['Skills_lem']).sum(axis=0))),
-                                   index=vect.get_feature_names()).sort_values(ascending=False)
-plt.subplots(figsize=(10, 5))
-sns.barplot(x=skills_languages_count[0:10].index, y=skills_languages_count[0:10])
-plt.xlabel('Languages', fontsize=5)
-plt.ylabel('Languages Count', fontsize=10)
+# General skills In Demand: trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'General')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=80)
+plt.yticks(fontsize=10)
+plt.title('General Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/general_skills_trends.png")
+
+# General Analytics skills In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'General Analytics')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=80)
+plt.yticks(fontsize=10)
+plt.title('General Analytics Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/general_analytics_skills_trends.png")
+
+# Devops skills In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Devops')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Top 10 Most Demanded Programming Languages')
-plt.savefig("visualisation/top10_languages.png")
+plt.title('Devops Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/devops_skills_trends.png")
 
-# Top 10 Most Demanded Big Data / Cloud skills
-vect = CountVectorizer(vocabulary=skills_big_cloud_data)
-skills_big_cloud_data_count = pd.Series(np.ravel((vect.fit_transform(df['Skills_lem']).sum(axis=0))),
-                                        index=vect.get_feature_names()).sort_values(ascending=False)
-plt.subplots(figsize=(10, 5))
-sns.barplot(x=skills_big_cloud_data_count[0:10].index, y=skills_big_cloud_data_count[0:10])
-plt.xlabel('Big Data / Cloud skills', fontsize=5)
-plt.ylabel('Count', fontsize=10)
+# Datastore skills In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Datastore')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=80)
+plt.yticks(fontsize=10)
+plt.title('Datastore Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/datastore_skills_trends.png")
+
+# Datapipelines skills In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Datapipelines')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Datapipelines Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/datapipelines_skills_trends.png")
+
+# Dataformats skills In Demand: trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Dataformats')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Dataformats Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/dataformats_skills_trends.png")
+
+# Cloud skills In Demand: Trends
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Cloud')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Cloud Skills In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/cloud_skills_trends.png")
+
+# Experience In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Experience')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Experience In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/experience_trends.png")
+
+# Education In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Education')]
+sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Education In Demand (Data Scientists): Trends')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/education_trends.png")
+
+
+
+##################################
+# SKILLS IN DEMAND BY JOB TITLES #
+##################################
+
+# Programming Languages In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Programming Languages')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Top 10 Most Demanded Big Data / Cloud skills')
-plt.savefig("visualisation/top10_big_data_skills.png")
+plt.title('Programming Languages In Demand')
+plt.xlabel('Programming Languages', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/programming_languages.png")
 
-# Top 10 Most Demanded Data Sciences / Machine Learning Skills
-vect = CountVectorizer(vocabulary=skills_machine_learning)
-skills_machine_learning_count = pd.Series(np.ravel((vect.fit_transform(df['Skills_lem']).sum(axis=0))),
-                                          index=vect.get_feature_names()).sort_values(ascending=False)
-plt.subplots(figsize=(10, 5))
-sns.barplot(x=skills_machine_learning_count[0:10].index, y=skills_machine_learning_count[0:10])
-plt.xlabel('Data Sciences / Machine Learning Skills', fontsize=5)
-plt.ylabel('Count', fontsize=10)
+# General skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'General')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Top 10 Most Demanded Data Sciences / Machine Learning Skills')
-plt.savefig("visualisation/top10_ML_skills.png")
+plt.title('General Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/general_skills.png")
+
+# General Analytics skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'General Analytics')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=80)
+plt.yticks(fontsize=10)
+plt.title('General Analytics Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/general_analytics_skills.png")
+
+# Devops skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Devops')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=20)
+plt.yticks(fontsize=10)
+plt.title('Devops Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/devops_skills.png")
+
+# Datastore skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Datastore')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=80)
+plt.yticks(fontsize=10)
+plt.title('Datastore Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/datastore_skills.png")
+
+# Datapipelines skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Datapipelines')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Datapipelines Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/datapipelines_skills.png")
+
+# Dataformats skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Dataformats')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Dataformats Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/dataformats_skills.png")
+
+# Cloud skills In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Cloud')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Cloud Skills In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/cloud_skills.png")
+
+# Experience In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Experience')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Experience In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/experience.png")
+
+# Education In Demand
+plt.figure(figsize=(10, 5))
+data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Education')]
+sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
+plt.xticks(rotation=10)
+plt.yticks(fontsize=10)
+plt.title('Education In Demand')
+plt.xlabel('Skills', fontsize=10)
+plt.ylabel('Frequency', fontsize=10)
+plt.tight_layout()
+plt.savefig("visualisation/education.png")
 
 plt.show()
 
-################
-# CORRELATIONS #
-################
-
-# Check R squared correlation coefficient between Job Type and average salary
-X = df['Job Type_le'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"The R squared correlation coefficient between job type and salary is: {y_model.score(X, y)}")
-
-# Check R squared correlation coefficient between Company's rating and average salary
-X = df['Rating'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print('Correlations')
-print(f"The R squared correlation coefficient between Company's rating and salary is: {y_model.score(X, y)}")
-
-# Check R squared correlation coefficient between industry and average salary
-X = df['Industry_le'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"The R squared correlation coefficient between industry and salary is: {y_model.score(X, y)}")
-
-# Check R squared correlation coefficient between sector and average salary
-X = df['Sector_le'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"The R squared correlation coefficient between sector and salary is: {y_model.score(X, y)}")
-
-# Check R squared correlation coefficient between company and average salary
-X = df['Company Name_le'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"The R squared correlation coefficient between company and salary is: {y_model.score(X, y)}")
-
-# Check R squared correlation coefficient between location and average salary
-X = df['Location_City_le'].values.reshape(-1, 1)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"The R squared correlation coefficient between location and salary is: {y_model.score(X, y)}")
