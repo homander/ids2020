@@ -4,6 +4,7 @@ import seaborn as sns
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import warnings
+
 warnings.simplefilter(action='ignore', category=FutureWarning)
 plt.rcParams.update({'figure.max_open_warning': 0})
 
@@ -21,20 +22,23 @@ df["US"] = "United States"
 fig = px.treemap(df, path=['US', 'Location State', 'Location City'], values='Avg Salary')
 fig.show()
 
-
 # SALARY DISTRIBUTION: MIN AND MAX
 sns.displot(df1, x='Min Salary', hue='Job Type', bins=20, element="step")
-plt.title('Min Salary distribution in US')
+plt.title('Min Salary distribution in US', fontweight="bold")
+plt.ylim([0, 1400])
+plt.xlim([0, 250000])
 plt.tight_layout()
 plt.savefig("visualisation/min salary.png")
 
 sns.displot(df1, x='Max Salary', hue='Job Type', bins=20, element="step")
-plt.title('Max Salary distribution in US')
+plt.title('Max Salary distribution in US', fontweight="bold")
+plt.ylim([0, 1400])
+plt.xlim([0, 250000])
 plt.tight_layout()
 plt.savefig("visualisation/max salary.png")
 
 sns.catplot(x='Job Type', y='Avg Salary', kind="box", data=df1)
-plt.title('Average Salary distribution in US')
+plt.title('Average Salary distribution in US', fontweight="bold")
 plt.tight_layout()
 plt.savefig("visualisation/avg salary.png")
 
@@ -42,7 +46,7 @@ plt.savefig("visualisation/avg salary.png")
 g = sns.FacetGrid(df1, hue='Job Type')
 g.map(sns.scatterplot, 'Avg Salary', 'Rating', alpha=.6)
 g.add_legend()
-plt.title('Max Salary distribution in US')
+plt.title('Max Salary distribution in US', fontweight="bold")
 plt.title("Company's rating and average salary correlation")
 plt.tight_layout()
 plt.savefig("visualisation/rating_salary_correlation.png")
@@ -53,7 +57,7 @@ sns.distplot(df['Min Salary'], color="b")
 sns.distplot(df['Max Salary'], color="r")
 plt.xlabel("Salary in USD")
 plt.legend({'Min Salary': df['Min Salary'], 'Max Salary': df['Max Salary']})
-plt.title("Distribution of Salary in US", fontsize=15)
+plt.title("Distribution of Salary in US", fontsize=15, fontweight="bold")
 plt.tight_layout()
 plt.savefig("visualisation/salary_distribution.png")
 
@@ -64,7 +68,7 @@ plt.xlabel('Job Title', fontsize=10)
 plt.ylabel('Job Count', fontsize=10)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Top 10 Job Titles')
+plt.title('Top 10 Job Titles', fontweight="bold")
 plt.tight_layout()
 plt.savefig("visualisation/most_popular_job_titles.png")
 
@@ -79,7 +83,7 @@ plt.subplots(figsize=(8, 5))
 labels = ownership_count.index
 sizes = ownership_count['Type of ownership']
 pie = plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
-plt.title('Top 5 Types of Ownership of The Companies Searching for DS-employees')
+plt.title('Top 5 Types of Ownership of The Companies Searching for DS-employees', fontweight="bold")
 plt.tight_layout()
 plt.savefig("visualisation/top5_types_ownership.png")
 
@@ -88,7 +92,7 @@ plt.figure(figsize=(8, 5))
 labels = sector_count.index
 sizes = sector_count['Sector']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
-plt.title('Top 10 Sectors with Data-related Job Posts')
+plt.title('Top 10 Sectors with Data-related Job Posts', fontweight="bold")
 plt.savefig("visualisation/top10_sectors.png")
 
 # Top 10 Industries Searching for DS-employees
@@ -96,7 +100,7 @@ plt.figure(figsize=(8, 5))
 labels = industry_count.index
 sizes = industry_count['Industry']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
-plt.title('Top 10 Industries Searching for DS-employees')
+plt.title('Top 10 Industries Searching for DS-employees', fontweight="bold")
 plt.savefig("visualisation/top10_industries.png")
 
 # Top 10 Companies Searching for DS-employees
@@ -104,7 +108,7 @@ plt.figure(figsize=(8, 5))
 labels = company_count.index
 sizes = company_count['Company Name']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
-plt.title('Top 10 Companies Searching for DS-employees')
+plt.title('Top 10 Companies Searching for DS-employees', fontweight="bold")
 plt.savefig("visualisation/top10_companies.png")
 
 # Top 10 Cities in US with Data-related Jobs
@@ -112,7 +116,7 @@ plt.figure(figsize=(8, 5))
 labels = city_count.index
 sizes = city_count['Location City']
 plt.pie(sizes, labels=labels, shadow=True, autopct='%1.1f%%')
-plt.title('Top 10 Cities in US with Data-related Jobs')
+plt.title('Top 10 Cities in US with Data-related Jobs', fontweight="bold")
 plt.savefig("visualisation/top10_cities.png")
 
 plt.figure(figsize=(8, 5))
@@ -130,7 +134,6 @@ wc.generate(str(' '.join(text)))
 plt.imshow(wc)
 plt.axis("off")
 plt.savefig("visualisation/wordcloud_skills_required.png")
-
 
 ###############################
 # MERGING SKILLS IN ONE TABLE #
@@ -217,7 +220,8 @@ education = pd.concat([education20, education19])
 education['Type'] = 'Education'
 
 # Form single table of skills required with year, type of skill and type of job info
-skills = pd.concat([education, experience, cloud, dataformats, datapipelines, datastore, devops, generalanalytics, general, lang])
+skills = pd.concat(
+    [education, experience, cloud, dataformats, datapipelines, datastore, devops, generalanalytics, general, lang])
 skills_a = pd.DataFrame(skills[['Skill', 'Analyst Count', 'Analyst Frequency', 'Year', 'Type']])
 skills_a.rename(columns={'Analyst Count': 'Count', 'Analyst Frequency': 'Frequency'}, inplace=True)
 skills_a['Job Type'] = 'Data Analyst'
@@ -233,7 +237,6 @@ skills = pd.concat([skills_a, skills_e, skills_s]).reset_index(drop=True).sort_v
 skills.to_csv('processed-data/skills.csv')
 skills.to_excel('processed-data/skills.xlsx')
 
-
 ###############################################
 # TRENDS IN SKILLS IN DEMAND (DATA SCIENTIST) #
 ###############################################
@@ -244,7 +247,7 @@ data = skills[(skills['Type'] == 'Programming Languages') & (skills['Job Type'] 
 sns.barplot(x="Skill", y="Frequency", hue="Year", data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Programming Languages In Demand (Data Scientists): Trends')
+plt.title('Programming Languages In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Programming Languages', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -256,7 +259,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Gen
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=80)
 plt.yticks(fontsize=10)
-plt.title('General Skills In Demand (Data Scientists): Trends')
+plt.title('General Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -268,7 +271,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Gen
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=80)
 plt.yticks(fontsize=10)
-plt.title('General Analytics Skills In Demand (Data Scientists): Trends')
+plt.title('General Analytics Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -280,7 +283,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Dev
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Devops Skills In Demand (Data Scientists): Trends')
+plt.title('Devops Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -292,7 +295,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Dat
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=80)
 plt.yticks(fontsize=10)
-plt.title('Datastore Skills In Demand (Data Scientists): Trends')
+plt.title('Datastore Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -304,7 +307,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Dat
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Datapipelines Skills In Demand (Data Scientists): Trends')
+plt.title('Datapipelines Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -316,7 +319,7 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Dat
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Dataformats Skills In Demand (Data Scientists): Trends')
+plt.title('Dataformats Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -328,19 +331,19 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Clo
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Cloud Skills In Demand (Data Scientists): Trends')
+plt.title('Cloud Skills In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
 plt.savefig("visualisation/cloud_skills_trends.png")
 
-# Experience In Demand
+# Experience In Demand: Trends
 plt.figure(figsize=(10, 5))
 data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Experience')]
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
-plt.xticks(rotation=10)
+plt.xticks(rotation=60)
 plt.yticks(fontsize=10)
-plt.title('Experience In Demand (Data Scientists): Trends')
+plt.title('Experience In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -352,13 +355,11 @@ data = skills[(skills['Job Type'] == 'Data Scientist') & (skills['Type'] == 'Edu
 sns.barplot(x='Skill', y='Frequency', hue='Year', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Education In Demand (Data Scientists): Trends')
+plt.title('Education In Demand (Data Scientists): Trends', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
 plt.savefig("visualisation/education_trends.png")
-
-
 
 ##################################
 # SKILLS IN DEMAND BY JOB TITLES #
@@ -370,7 +371,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Programming Langu
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Programming Languages In Demand')
+plt.title('Programming Languages In Demand', fontweight="bold")
 plt.xlabel('Programming Languages', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -382,7 +383,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'General')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('General Skills In Demand')
+plt.title('General Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -394,7 +395,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'General Analytics
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=80)
 plt.yticks(fontsize=10)
-plt.title('General Analytics Skills In Demand')
+plt.title('General Analytics Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -406,7 +407,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Devops')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=20)
 plt.yticks(fontsize=10)
-plt.title('Devops Skills In Demand')
+plt.title('Devops Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -418,7 +419,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Datastore')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=80)
 plt.yticks(fontsize=10)
-plt.title('Datastore Skills In Demand')
+plt.title('Datastore Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -430,7 +431,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Datapipelines')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Datapipelines Skills In Demand')
+plt.title('Datapipelines Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -442,7 +443,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Dataformats')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Dataformats Skills In Demand')
+plt.title('Dataformats Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -454,7 +455,7 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Cloud')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Cloud Skills In Demand')
+plt.title('Cloud Skills In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -464,9 +465,9 @@ plt.savefig("visualisation/cloud_skills.png")
 plt.figure(figsize=(10, 5))
 data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Experience')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
-plt.xticks(rotation=10)
+plt.xticks(rotation=60)
 plt.yticks(fontsize=10)
-plt.title('Experience In Demand')
+plt.title('Experience In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
@@ -478,11 +479,10 @@ data = skills[(skills['Year'] == '2020') & (skills['Type'] == 'Education')]
 sns.barplot(x='Skill', y='Frequency', hue='Job Type', data=data)
 plt.xticks(rotation=10)
 plt.yticks(fontsize=10)
-plt.title('Education In Demand')
+plt.title('Education In Demand', fontweight="bold")
 plt.xlabel('Skills', fontsize=10)
 plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
 plt.savefig("visualisation/education.png")
 
 plt.show()
-
