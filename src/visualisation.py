@@ -484,5 +484,53 @@ plt.ylabel('Frequency', fontsize=10)
 plt.tight_layout()
 plt.savefig("visualisation/education.png")
 
+##################
+# Skill profiles #
+##################
+
+DIM_Y = 2
+DIM_X = 2
+TOP_N = 10
+
+def plot_skills(job_type, skill_type, k):
+    ax = plt.subplot(DIM_Y, DIM_X, k)
+    data = skills[
+        (skills['Year'] == '2020') &
+        (skills['Type'] == skill_type) &
+        (skills['Job Type'] == job_type)
+    ]
+    data = data[:TOP_N]
+    sns.barplot(y='Skill', x='Frequency', data=data, ax=ax)
+    #plt.yticks(rotation=20)
+    plt.xticks(fontsize=10)
+    plt.title(skill_type)
+    plt.ylabel('', fontsize=10)
+    plt.xlabel('Frequency (%)', fontsize=10)
+    plt.tight_layout()
+
+# Skill profile for data scientists
+plt.figure()
+plot_skills('Data Scientist', 'Programming Languages', 1)
+plot_skills('Data Scientist', 'General Analytics', 2)
+plot_skills('Data Scientist', 'General', 3)
+plot_skills('Data Scientist', 'Cloud', 4)
+plt.savefig("visualisation/skill_profile_data_scientist.png")
+
+# Skill profile for data engineers
+plt.figure()
+plot_skills('Data Engineer', 'Programming Languages', 1)
+plot_skills('Data Engineer', 'General Analytics', 2)
+plot_skills('Data Engineer', 'General', 3)
+plot_skills('Data Engineer', 'Cloud', 4)
+plt.savefig("visualisation/skill_profile_data_engineer.png")
+
+# Skill profile for data analysts
+plt.figure()
+plot_skills('Data Analyst', 'Programming Languages', 1)
+plot_skills('Data Analyst', 'General Analytics', 2)
+plot_skills('Data Analyst', 'General', 3)
+plot_skills('Data Analyst', 'Cloud', 4)
+plt.savefig("visualisation/skill_profile_data_analyst.png")
+
 plt.show()
 
