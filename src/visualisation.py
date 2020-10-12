@@ -490,7 +490,7 @@ plt.savefig("visualisation/education.png")
 ##################
 
 DIM_Y = 2
-DIM_X = 2
+DIM_X = 3
 TOP_N = 10
 
 def plot_skills(job_type, skill_type, k):
@@ -510,27 +510,39 @@ def plot_skills(job_type, skill_type, k):
     plt.tight_layout()
 
 # Skill profile for data scientists
-plt.figure()
+plt.figure(figsize=(10, 5))
 plot_skills('Data Scientist', 'Programming Languages', 1)
 plot_skills('Data Scientist', 'General Analytics', 2)
-plot_skills('Data Scientist', 'General', 3)
-plot_skills('Data Scientist', 'Cloud', 4)
+plot_skills('Data Scientist', 'Cloud', 3)
+plot_skills('Data Scientist', 'General', 4)
+plot_skills('Data Scientist', 'Experience', 5)
+plot_skills('Data Scientist', 'Education', 6)
+#plot_skills('Data Scientist', 'Datapipelines', 5)
+#plot_skills('Data Scientist', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_scientist.png")
 
 # Skill profile for data engineers
-plt.figure()
+plt.figure(figsize=(10, 5))
 plot_skills('Data Engineer', 'Programming Languages', 1)
 plot_skills('Data Engineer', 'General Analytics', 2)
-plot_skills('Data Engineer', 'General', 3)
-plot_skills('Data Engineer', 'Cloud', 4)
+plot_skills('Data Engineer', 'Cloud', 3)
+plot_skills('Data Engineer', 'General', 4)
+plot_skills('Data Engineer', 'Experience', 5)
+plot_skills('Data Engineer', 'Education', 6)
+#plot_skills('Data Engineer', 'Datapipelines', 5)
+#plot_skills('Data Engineer', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_engineer.png")
 
 # Skill profile for data analysts
-plt.figure()
+plt.figure(figsize=(10, 5))
 plot_skills('Data Analyst', 'Programming Languages', 1)
 plot_skills('Data Analyst', 'General Analytics', 2)
-plot_skills('Data Analyst', 'General', 3)
-plot_skills('Data Analyst', 'Cloud', 4)
+plot_skills('Data Analyst', 'Cloud', 3)
+plot_skills('Data Analyst', 'General', 4)
+plot_skills('Data Analyst', 'Experience', 5)
+plot_skills('Data Analyst', 'Education', 6)
+#plot_skills('Data Analyst', 'Datapipelines', 5)
+#plot_skills('Data Analyst', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_analyst.png")
 
 plt.show()
