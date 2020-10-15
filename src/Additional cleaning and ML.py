@@ -114,7 +114,7 @@ print(f"The R squared correlation coefficient between job+state+city+company and
 # Tokenizing words
 print('Tokenizing...', end=' ')
 tokenizer = RegexpTokenizer(r'\S+')
-df['Skills'] = df['Skills required'].apply(lambda x: tokenizer.tokenize(x.lower()))
+df['Skills'] = df['Job Description'].apply(lambda x: tokenizer.tokenize(x.lower()))
 print('Tokenizing OK')
 
 '''
