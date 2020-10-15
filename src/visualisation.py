@@ -9,7 +9,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 plt.rcParams.update({'figure.max_open_warning': 0})
 
 # Import preprocessed CSV file
-df = pd.read_csv('processed-data/df_cleaned_for_visualisation.csv', index_col=0)
+df = pd.read_csv('processed-data/df_cleaned_filtered.csv', index_col=0)
 
 ######################
 # VISUALIZATION PART #
@@ -120,7 +120,7 @@ plt.title('Top 10 Cities in US with Data-related Jobs', fontweight="bold")
 plt.savefig("visualisation/top10_cities.png")
 
 plt.figure(figsize=(8, 5))
-wc = WordCloud()
+wc = WordCloud(background_color='White')
 text = df['Job Title']
 wc.generate(str(' '.join(text)))
 plt.imshow(wc)
@@ -128,8 +128,8 @@ plt.axis("off")
 plt.savefig("visualisation/wordcloud_job_titles.png")
 
 plt.figure(figsize=(8, 5))
-wc = WordCloud()
-text = df['Skills required']
+wc = WordCloud(background_color='White')
+text = df['Job Description']
 wc.generate(str(' '.join(text)))
 plt.imshow(wc)
 plt.axis("off")
@@ -493,21 +493,23 @@ DIM_Y = 2
 DIM_X = 3
 TOP_N = 10
 
+
 def plot_skills(job_type, skill_type, k):
     ax = plt.subplot(DIM_Y, DIM_X, k)
     data = skills[
         (skills['Year'] == '2020') &
         (skills['Type'] == skill_type) &
         (skills['Job Type'] == job_type)
-    ]
+        ]
     data = data[:TOP_N]
     sns.barplot(y='Skill', x='Frequency', data=data, ax=ax)
-    #plt.yticks(rotation=20)
+    # plt.yticks(rotation=20)
     plt.xticks(fontsize=10)
     plt.title(skill_type)
     plt.ylabel('', fontsize=10)
     plt.xlabel('Frequency (%)', fontsize=10)
     plt.tight_layout()
+
 
 # Skill profile for data scientists
 plt.figure(figsize=(10, 5))
@@ -517,8 +519,8 @@ plot_skills('Data Scientist', 'Cloud', 3)
 plot_skills('Data Scientist', 'General', 4)
 plot_skills('Data Scientist', 'Experience', 5)
 plot_skills('Data Scientist', 'Education', 6)
-#plot_skills('Data Scientist', 'Datapipelines', 5)
-#plot_skills('Data Scientist', 'Datastore', 6)
+# plot_skills('Data Scientist', 'Datapipelines', 5)
+# plot_skills('Data Scientist', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_scientist.png")
 
 # Skill profile for data engineers
@@ -529,8 +531,8 @@ plot_skills('Data Engineer', 'Cloud', 3)
 plot_skills('Data Engineer', 'General', 4)
 plot_skills('Data Engineer', 'Experience', 5)
 plot_skills('Data Engineer', 'Education', 6)
-#plot_skills('Data Engineer', 'Datapipelines', 5)
-#plot_skills('Data Engineer', 'Datastore', 6)
+# plot_skills('Data Engineer', 'Datapipelines', 5)
+# plot_skills('Data Engineer', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_engineer.png")
 
 # Skill profile for data analysts
@@ -541,8 +543,8 @@ plot_skills('Data Analyst', 'Cloud', 3)
 plot_skills('Data Analyst', 'General', 4)
 plot_skills('Data Analyst', 'Experience', 5)
 plot_skills('Data Analyst', 'Education', 6)
-#plot_skills('Data Analyst', 'Datapipelines', 5)
-#plot_skills('Data Analyst', 'Datastore', 6)
+# plot_skills('Data Analyst', 'Datapipelines', 5)
+# plot_skills('Data Analyst', 'Datastore', 6)
 plt.savefig("visualisation/skill_profile_data_analyst.png")
 
 plt.show()

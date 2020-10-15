@@ -6,7 +6,7 @@ import sys
 
 # Whether the title should be an exact match, e.g. "data scientist".
 # Or, should we include approximate matches, such as "data scientist, analytics"
-# A value between 0 (most strict) and 2 (least strict)
+# A value between 0 (most strict) and 2 (least strict, default)
 FILTER_LEVEL = 1
 
 if len(sys.argv) != 2:
@@ -15,7 +15,7 @@ if len(sys.argv) != 2:
 
 file_name = sys.argv[1]
 
-df = pd.read_csv('processed-data/'+file_name, index_col=0)
+df = pd.read_csv('processed-data/' + file_name, index_col=0)
 print(f'Found {df.shape[0]} jobs, out of which')
 
 if FILTER_LEVEL == 0:
@@ -69,5 +69,5 @@ print(f'A total of {df.shape[0]} jobs remain')
 
 file_name = file_name[0: file_name.index('.')]
 
-df.to_csv('processed-data/'+file_name+'_filtered''.csv')
-df.to_excel('processed-data/'+file_name+'_filtered.xlsx')
+df.to_csv('processed-data/' + file_name + '_filtered''.csv')
+df.to_excel('processed-data/' + file_name + '_filtered.xlsx')

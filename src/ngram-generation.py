@@ -4,12 +4,12 @@ import pandas as pd
 import string
 import nltk
 
-all_columns = pd.read_csv('processed-data/df_cleaned.csv')
+all_columns = pd.read_csv('processed-data/df_cleaned_filtered.csv')
 
-jds = pd.DataFrame(all_columns['Skills required'])
+jds = pd.DataFrame(all_columns['Job Description'])
 
 # rename column
-jds.rename(columns={'Skills required': 'description'}, inplace=True)
+jds.rename(columns={'Job Description': 'description'}, inplace=True)
 jds['description'] = jds['description'].str.lower()
 
 # remove punctuation
