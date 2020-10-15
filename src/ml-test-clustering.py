@@ -30,7 +30,7 @@ scientist = res[res['Job Type'] == 'data scientist']
 engineer = res[res['Job Type'] == 'data engineer']
 analyst = res[res['Job Type'] == 'data analyst']
 
-f, ax = plt.subplots(1, 3, sharey=False)
+f, ax = plt.subplots(1, 3, sharey=False, figsize=(10, 4))
 ax[0].hist(scientist['Label'])
 ax[0].set_title('Data Scientist Jobs')
 ax[0].set_xlabel('Label')
@@ -43,4 +43,5 @@ ax[2].hist(analyst['Label'])
 ax[2].set_title('Data Analyst Jobs')
 ax[2].set_xlabel('Label')
 #ax[2].set_ylabel('Number of jobs')
+plt.tight_layout()
 plt.show()

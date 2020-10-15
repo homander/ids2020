@@ -6,8 +6,8 @@ import sys
 
 # Whether the title should be an exact match, e.g. "data scientist".
 # Or, should we include approximate matches, such as "data scientist, analytics"
-# A value between 0 (most strict) and 2 (least strict, default)
-FILTER_LEVEL = 2
+# A value between 0 (most strict) and 2 (least strict)
+FILTER_LEVEL = 1
 
 if len(sys.argv) != 2:
     print('Wrong number of arguments.')
