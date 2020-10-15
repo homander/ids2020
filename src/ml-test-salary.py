@@ -6,8 +6,11 @@ from sklearn import linear_model, model_selection, feature_selection
 # Load data #
 #############
 
-df = pd.read_csv('processed-data/df_cleaned.csv', index_col=0)
+df = pd.read_csv('processed-data/df_cleaned_filtered.csv', index_col=0)
 X = pd.read_csv('processed-data/2020-X.csv', index_col=0)
+
+print('df.shape:', df.shape)
+print('X.shape:', X.shape)
 
 # FOR TESTING: CHOOSE ONLY THE FIRST 1000 JOBS
 df = df[:1000]

@@ -7,8 +7,11 @@ from sklearn.decomposition import PCA
 # Load data #
 #############
 
-df = pd.read_csv('processed-data/df_filtered.csv', index_col=0)
+df = pd.read_csv('processed-data/df_cleaned_filtered.csv', index_col=0)
 X = pd.read_csv('processed-data/2020-X.csv', index_col=0)
+
+print('df.shape:', df.shape)
+print('X.shape:', X.shape)
 
 ###################
 # With 3 clusters #
