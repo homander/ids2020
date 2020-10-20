@@ -55,7 +55,6 @@ plt.scatter(reg.predict(X), y)
 plt.title(f'No train/test split (OLS, R2={r2:0.2f})')
 plt.xlabel('Predicted salary')
 plt.ylabel('Actual salary')
-#plt.xticks(np.arange(0, 250001, step=50000))
 plt.tight_layout()
 
 # With train/test split
