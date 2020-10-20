@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn import linear_model, model_selection
@@ -28,41 +29,33 @@ print('X_skills.shape:', X_skills.shape)
 # Encode categorical features #
 ###############################
 
-# The results are basically the same with just a few categorical variables
-# but we'll include more than necessary for completeness
-df_categ = df[['Location City', 'Company Name', 'Industry', 'Type of ownership']]
+df_categ = df[['Job Type', 'Location City', 'Company Name']]
 enc = OneHotEncoder(drop='first').fit(df_categ)
 X_categ = pd.DataFrame(enc.transform(df_categ).toarray(), index=df_categ.index)
-
-#############################
-# Other continuous features #
-#############################
-
-X_cont = df[['Rating']]
 
 ##############################################
 # Modeling: salary ~ skills + other features #
 ##############################################
 
 y = df['Avg Salary']
-X = pd.concat([X_categ, X_cont, X_skills], axis=1)
+X = pd.concat([X_categ, X_skills], axis=1)
 
 plt.figure(figsize=(10, 3.5))
 
 # Without train/test split
-X_train, X_test, y_train, y_test = X, X, y, y
-reg = linear_model.LinearRegression().fit(X_train, y_train)
-r2 = reg.score(X_test, y_test)
+reg = linear_model.LinearRegression().fit(X, y)
+r2 = reg.score(X, y)
 print('When no splitting')
 print('  Estimator: OLS')
 print('  R^2:', r2)
 print('  Intercept:', reg.intercept_)
 
 plt.subplot(1, 2, 1)
-plt.scatter(reg.predict(X_test), y_test)
+plt.scatter(reg.predict(X), y)
 plt.title(f'No train/test split (OLS, R2={r2:0.2f})')
 plt.xlabel('Predicted salary')
 plt.ylabel('Actual salary')
+#plt.xticks(np.arange(0, 250001, step=50000))
 plt.tight_layout()
 
 # With train/test split

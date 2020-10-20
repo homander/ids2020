@@ -12,6 +12,13 @@ import statsmodels.api as sm
 df = pd.read_csv('processed-data/df_cleaned_filtered.csv', index_col=0)
 df_X = pd.read_csv('processed-data/2020-X.csv', index_col=0)
 
+# If you want to build a separate model for each job type,
+# then set this to True
+if False:
+    mask = df['Job Type'] == 'data scientist'
+    df = df[mask]
+    df_X = df_X[mask]
+
 #############################
 # ADDITIONAL DATA WRANGLING #
 #############################
@@ -127,9 +134,32 @@ y_model = LinearRegression().fit(X, y)
 print(f"R squared correlation coefficient between job+state+city+company and salary: {y_model.score(X, y)}")
 # print(sm.OLS(y, sm.add_constant(X)).fit().summary())
 
+###########################
+# ADD SKILLS TO THE MODEL #
+###########################
+
+# Check R squared correlation coefficient between skills and average salary
+X = df_X
+y = df['Avg Salary'].values.reshape(-1, 1)
+y_model = LinearRegression().fit(X, y)
+print(f"R squared correlation coefficient between skills and salary: {y_model.score(X, y)}")
+# print(sm.OLS(y, sm.add_constant(X)).fit().summary())
+
+# Check R squared correlation coefficient between city+job+company+skills and average salary
+X = df[['Job Type_le', 'Location City_le', 'Company Name_le']]
+X = pd.DataFrame(onehotencoder.fit_transform(X).toarray())
+X_concat = pd.concat([X, df_X], axis=1, sort=False)
+y = df['Avg Salary'].values.reshape(-1, 1)
+y_model = LinearRegression().fit(X_concat, y)
+print(f"R squared correlation coefficient between job+city+company+skills and salary: {y_model.score(X_concat, y)}")
+# print(sm.OLS(y, sm.add_constant(X_concat)).fit().summary())
+
 ##########################################
 # ADDITIONAL WRANGLING (JOB DESCRIPTION) #
 ##########################################
+
+# In this section, we double-check our results by trying an alternative approach
+# so that instead of predefined skill vocabularies we use a large set of n-grams
 
 # Tokenizing words
 # print('Tokenizing...', end=' ')
@@ -174,22 +204,6 @@ y = df['Avg Salary'].values.reshape(-1, 1)
 y_model = LinearRegression().fit(X, y)
 print(f"R squared correlation coefficient between job description and salary: {y_model.score(X, y)}")
 # print(sm.OLS(y, sm.add_constant(X)).fit().summary())
-
-# Check R squared correlation coefficient between skills and average salary
-X = df_X
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X, y)
-print(f"R squared correlation coefficient between skills and salary: {y_model.score(X, y)}")
-# print(sm.OLS(y, sm.add_constant(X)).fit().summary())
-
-# Check R squared correlation coefficient between city+job+company+skills and average salary
-X = df[['Job Type_le', 'Location City_le', 'Company Name_le']]
-X = pd.DataFrame(onehotencoder.fit_transform(X).toarray())
-X_concat = pd.concat([X, df_X], axis=1, sort=False)
-y = df['Avg Salary'].values.reshape(-1, 1)
-y_model = LinearRegression().fit(X_concat, y)
-print(f"R squared correlation coefficient between job+city+company+skills and salary: {y_model.score(X_concat, y)}")
-# print(sm.OLS(y, sm.add_constant(X_concat)).fit().summary())
 
 # Check R squared correlation coefficient between city+job+company+job_description and average salary
 X = df[['Job Type_le', 'Location City_le', 'Company Name_le']]
